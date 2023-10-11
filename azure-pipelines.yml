@@ -36,13 +36,13 @@ stages:
         - task: PublishPipelineArtifact@1
           inputs:
            targetPath: '$(Pipeline.Workspace)'
-           artifact: 'DemoArtifactyml'
+           artifact: 'DemoArtifactml'
            publishLocation: 'pipeline'
 
   - stage: DownloadArtifact
     jobs:
       - deployment: Stage
-        environment: Stage
+        environment: DevTest-Stage
         strategy:
          runOnce:
            deploy:
@@ -53,6 +53,6 @@ stages:
                 project: '7e8c8f03-d3cd-4873-b071-549048546679'
                 definition: '24'
                 buildVersionToDownload: 'latest'
-                artifactName: 'DemoArtifactyml'
+                artifactName: 'DemoArtifactml'
                 targetPath: '$(Pipeline.Workspace)'
 
