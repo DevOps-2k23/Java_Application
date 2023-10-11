@@ -24,7 +24,7 @@ stages:
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'install'
-              publishJUnitResults: true  # Enable this if you have unit tests
+              publishJUnitResults: false  # Enable this if you have unit tests
               javaHomeOption: 'JDKVersion'
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
