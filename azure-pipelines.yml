@@ -3,25 +3,28 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
-trigger:
-- master
+trigger: none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: Windows-latest
 
-steps:
-- task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'Install'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    testRunTitle: 'Install -testing'
-    allowBrokenSymlinks: false
-    javaHomeOption: 'JDKVersion'
-    mavenVersionOption: 'Default'
-    mavenAuthenticateFeed: false
-    effectivePomSkip: false
-    sonarQubeRunAnalysis: true
-    sqMavenPluginVersionChoice: 'latest'
-    checkStyleRunAnalysis: true
+stages:
+  - stage: CheckoutCode
+    jobs: 
+      - job: 'CheckoutGitCode'
+        steps:
+           - checkout: self
+  - stage: Build
+    jobs:
+      - job: "BuildJob"
+        steps:
+          - task: Maven@4
+            inputs:
+               mavenPomFile: 'pom.xml'
+               goals: 'install'
+               publishJUnitResults: false
+               javaHomeOption: 'JDKVersion'
+               mavenVersionOption: 'Default'
+               mavenAuthenticateFeed: false
+               effectivePomSkip: false
+               sonarQubeRunAnalysis: false
