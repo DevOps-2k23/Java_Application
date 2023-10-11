@@ -28,3 +28,31 @@ stages:
                mavenAuthenticateFeed: false
                effectivePomSkip: false
                sonarQubeRunAnalysis: false
+
+  - stage: PublishArtifact
+    jobs:
+      - job: 'Publish_artifactjob'
+        steps:
+        - task: PublishPipelineArtifact@1
+          inputs:
+           targetPath: '$(Pipeline.Workspace)'
+           artifact: 'DemoArtifactyml'
+           publishLocation: 'pipeline'
+
+  - stage: DownloadArtifact
+    jobs:
+      - deployment: Stage
+        environment: Stage
+        strategy:
+         runOnce:
+           deploy:
+             steps:
+             - task: DownloadPipelineArtifact@2
+               inputs:
+                buildType: 'specific'
+                project: '7e8c8f03-d3cd-4873-b071-549048546679'
+                definition: '24'
+                buildVersionToDownload: 'latest'
+                artifactName: 'DemoArtifactyml'
+                targetPath: '$(Pipeline.Workspace)'
+
