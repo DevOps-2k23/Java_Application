@@ -4,56 +4,56 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
--  master
+- master
 
 pool:
-  vmImage: Windows-latest
+  vmImage: 'windows-latest'
 
 stages:
   - stage: CheckoutCode
-    jobs: 
+    jobs:
       - job: 'CheckoutGitCode'
         steps:
-           - checkout: self
+        - checkout: self
+
   - stage: Build
     jobs:
-      - job: "BuildJob"
+      - job: 'BuildJob'
         steps:
           - task: Maven@4
             inputs:
-               mavenPomFile: 'pom.xml'
-               goals: 'install'
-               publishJUnitResults: false
-               javaHomeOption: 'JDKVersion'
-               mavenVersionOption: 'Default'
-               mavenAuthenticateFeed: false
-               effectivePomSkip: false
-               sonarQubeRunAnalysis: false
+              mavenPomFile: 'pom.xml'
+              goals: 'install'
+              publishJUnitResults: true  # Enable this if you have unit tests
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
 
   - stage: PublishArtifact
     jobs:
-      - job: 'Publish_artifactjob'
+      - job: 'PublishArtifactJob'
         steps:
         - task: PublishPipelineArtifact@1
           inputs:
-           targetPath: '$(Pipeline.Workspace)'
-           artifact: 'DemoArtifactml'
-           publishLocation: 'pipeline'
+            targetPath: '$(Pipeline.Workspace)'
+            artifact: 'DemoArtifact'  # Corrected the artifact name
+            publishLocation: 'pipeline'
 
   - stage: DownloadArtifact
     jobs:
       - deployment: Stage
         environment: DevTest-Stage
         strategy:
-         runOnce:
-           deploy:
-             steps:
-             - task: DownloadPipelineArtifact@2
-               inputs:
-                buildType: 'specific'
-                project: '7e8c8f03-d3cd-4873-b071-549048546679'
-                definition: '24'
-                buildVersionToDownload: 'latest'
-                artifactName: 'DemoArtifactml'
-                targetPath: '$(Pipeline.Workspace)'
-
+          runOnce:
+            deploy:
+              steps:
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  buildType: 'specific'
+                  project: '7e8c8f03-d3cd-4873-b071-549048546679'  # Replace with your project ID
+                  definition: '24'  # Replace with your definition ID
+                  buildVersionToDownload: 'latest'
+                  artifactName: 'DemoArtifact'
+                  targetPath: '$(Pipeline.Workspace)'
