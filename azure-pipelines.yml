@@ -53,7 +53,7 @@ stages:
                 inputs:
                   buildType: 'specific'
                   project: '7e8c8f03-d3cd-4873-b071-549048546679'  # Replace with your project ID
-                  definition: '24'  # Replace with your definition ID
+                  #definition: '24'  # Replace with your definition ID
                   buildVersionToDownload: 'latest'
                   artifactName: 'DemoArtifact'
                   targetPath: '$(Pipeline.Workspace)'
